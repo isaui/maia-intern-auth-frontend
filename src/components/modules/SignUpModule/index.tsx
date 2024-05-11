@@ -7,7 +7,7 @@ import VerifyEmailSection from "./sections/VerifyEmailSection";
 const SignUpModule = () => {
     const [hasEmailBeenSent, setHasEmailBeenSent] = useState<boolean>(false)
     const [email, setEmail] = useState<string>("")
-    return <div className="flex flex-col w-screen min-h-screen bg-[#F1F5F9]">
+    return <div className="flex flex-col w-screen min-h-screen bg-[#F1F5F9] overflow-x-hidden">
         <Navbar/>
         <div className="px-4 mt-20">
             {hasEmailBeenSent? <VerifyEmailSection email={email}/> : <SignUpSection callbackEmailSent={(emailTarget: string)=>{

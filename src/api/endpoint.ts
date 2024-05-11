@@ -8,6 +8,11 @@ type RegisterPayload = {
     name: string
 }
 
+type LoginPayload = {
+    identifier: String,
+    password: String
+}
+
 export type UserDTO = {
     userId: number,
     name: string,
@@ -17,11 +22,20 @@ export type UserDTO = {
 
 export const handleRegisterAPI = async (payload: RegisterPayload) => {
     const endpoint = BK_BASE_URL+"/auth/register"
-    const response = await axios.post(endpoint, payload);
-    const data = response.data;
-    console.log(data);
+    await axios.post(endpoint, payload);
 }
 
+export const handleLoginAPI = async(payload: LoginPayload) : Promise<string | undefined> => {
+    const endpoint = BK_BASE_URL+"/auth/login"
+    try {
+        const response = await axios.post(endpoint, payload)
+        const data = response.data.data;
+        return data.token
+    } catch (error) {
+        console.log(error);
+        return undefined
+    }
+}
 
 export const handleVerifyRegisterAPI = async (registrationToken: string): Promise<UserDTO | undefined> => {
     const endpoint = BK_BASE_URL+"/auth/register/activate/"+registrationToken;

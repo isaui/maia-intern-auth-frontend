@@ -21,7 +21,7 @@ const Navbar = () => {
           <div>
             <ul className="hidden md:flex items-center space-x-4">
               <li>
-                <Link href="/login">
+                <Link href="/signin">
                   <p className="text-black ">Login</p>
                 </Link>
               </li>

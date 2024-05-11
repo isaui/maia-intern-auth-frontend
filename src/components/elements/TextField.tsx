@@ -11,7 +11,7 @@ interface TextFieldProps {
   
   const TextField: React.FC<TextFieldProps> = ({ label, type, placeholder, value, onChange, children }) => {
     return (
-      <div className="mb-4">
+      <div className="mb-4 relative">
         <label className="block text-gray-700 text-sm  mb-2">
           {label}
         </label>
