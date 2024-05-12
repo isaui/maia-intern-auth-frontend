@@ -72,7 +72,7 @@ const SignInSection = () => {
          workspace and continue your projects. Let's pick up where you left off!`}</p>
         <div className="mt-8 mb-4">
             <TextField label={"Email Address"} type="text" onChange={handleChangeEmail} placeholder="Email" value={email}/>
-            <TextField label={"Create Password"} type="password" onChange={handleChangePassword} placeholder="Password" value={password}>
+            <TextField label={"Password"} type="password" onChange={handleChangePassword} placeholder="Password" value={password}>
                 <a className="absolute top-0 right-0 underline text-sm text-[#2F2F2F]" href="#">Forgot?</a>
             </TextField>
             {afterSubmit && error && <div className="rounded-md w-full max-w-md mx-auto md:my-auto text-sm border-[#FBDFDF] border-2 bg-[#FFF5F5]
