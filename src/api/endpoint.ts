@@ -1,5 +1,5 @@
 import axios from "axios"
-import { BK_BASE_URL } from "./constant"
+import { BK_BASE_URL, TOO_MANY_REQUEST } from "./constant"
 
 type RegisterPayload = {
     password: String,
@@ -31,7 +31,11 @@ export const handleLoginAPI = async(payload: LoginPayload) : Promise<string | un
         const response = await axios.post(endpoint, payload)
         const data = response.data.data;
         return data.token
-    } catch (error) {
+    } catch (error:any) {
+        console.log(error)
+        if(error.response.status === 429){
+            return TOO_MANY_REQUEST
+        }
         return undefined
     }
 }

@@ -5,6 +5,7 @@ import { getUserDataAPI, handleLoginAPI } from "@/api/endpoint"
 import { useRouter } from "next/navigation"
 import { useDispatch } from "react-redux"
 import { login } from "@/redux/slice/AuthSlice"
+import { TOO_MANY_REQUEST } from "@/api/constant"
 
 const SignInSection = () => {
     const router = useRouter()
@@ -14,6 +15,7 @@ const SignInSection = () => {
     const [password, setPassword] = useState<string>("")
     const [email, setEmail] = useState<string>("")
     const [sessionExpired, setSessionExpired] = useState(false);
+    const [tooManyRequest, setTooManyRequest] = useState(false)
 
     useEffect(() => {
         // Mendapatkan bagian hash dari URL
@@ -44,6 +46,10 @@ const SignInSection = () => {
             setError(true)
             return
         }
+        else if(token === TOO_MANY_REQUEST){
+            setTooManyRequest(true)
+            return
+        }
         else{
             const userData = await getUserDataAPI(token);
             if(userData){
@@ -53,10 +59,15 @@ const SignInSection = () => {
         router.push("/dashboard")
     }
     return <div className=" max-w-md mx-auto ">
+         {
+            tooManyRequest && <div className="rounded-md w-full
+            max-w-md mx-auto md:my-auto text-sm border-[#FBDFDF] border-2 mt-8 bg-[#FFF5F5]
+                           text-[#79889D] p-4">{`Too many requests. Please try again later within 1 minute.`}</div>
+        }
         {sessionExpired && <div className="rounded-md w-full
          max-w-md mx-auto md:my-auto text-sm border-[#FBDFDF] border-2 bg-[#FFF5F5]
                         text-[#79889D] p-4">{`Your session has expired. Please sign in again.`}</div>}
-        <h1 className={`text-[#2F2F2F] font-bold text-2xl ${sessionExpired? "mt-4" : ""}`}>Welcome Back!</h1>
+        <h1 className={`text-[#2F2F2F] font-bold text-2xl ${sessionExpired || tooManyRequest? "mt-4" : ""}`}>Welcome Back!</h1>
         <p className="mt-4 text-[#2F2F2F]">{`Sign in below to access your
          workspace and continue your projects. Let's pick up where you left off!`}</p>
         <div className="mt-8 mb-4">

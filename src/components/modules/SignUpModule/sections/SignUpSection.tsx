@@ -3,7 +3,6 @@ import TextField from "@/components/elements/TextField";
 import { ChangeEvent, useState } from "react";
 import PasswordValidator from "../module-elements/PasswordValidator";
 import { handleRegisterAPI } from "@/api/endpoint";
-import { AxiosError } from "axios";
 
 type SignUpSectionProps = {
     callbackEmailSent: (email:string) => void;
@@ -16,6 +15,7 @@ const SignUpSection: React.FC<SignUpSectionProps> = ({ callbackEmailSent }) => {
     const [name, setName] = useState<string>("")
     const [password, setPassword] = useState<string>("")
     const [email, setEmail] = useState<string>("")
+    const [tooManyRequest, setTooManyRequest] = useState(false)
 
     const isPasswordValid = () : boolean => {
         const isLengthValid = password.length >= 8;
@@ -53,6 +53,9 @@ const SignUpSection: React.FC<SignUpSectionProps> = ({ callbackEmailSent }) => {
             if(err.response.status == 406){
                 setIsEmailAlreadyInUse(true)
             }
+            if(err.response.status == 429){
+                setTooManyRequest(true)
+            }
             console.log(err.response.status)
             return
         }
@@ -77,7 +80,12 @@ const SignUpSection: React.FC<SignUpSectionProps> = ({ callbackEmailSent }) => {
     }
 
     return <div className=" max-w-md mx-auto md:my-auto">
-        <h1 className="text-[#2F2F2F] font-bold text-2xl">Sign Up to Maia</h1>
+        {
+            tooManyRequest && <div className="rounded-md w-full
+            max-w-md mx-auto md:my-auto text-sm border-[#FBDFDF] border-2 mt-8 bg-[#FFF5F5]
+                           text-[#79889D] p-4">{`Too many requests. Please try again later within 1 minute.`}</div>
+        }
+        <h1 className={`text-[#2F2F2F] font-bold text-2xl ${tooManyRequest? "mt-4": ""}`}>Sign Up to Maia</h1>
         <div className="mt-8 mb-4">
             <TextField label={"Your Name"} type="text" onChange={handleChangeName} placeholder="Your Name" value={name}>
                 {afterSubmit && isNameEmpty() && <div className="rounded-md w-full text-sm border-[#FBDFDF] border-2 bg-[#FFF5F5]
@@ -100,6 +108,7 @@ const SignUpSection: React.FC<SignUpSectionProps> = ({ callbackEmailSent }) => {
         you agree with our <a className="underline">Terms of Service</a> and <a className="underline">Privacy Policy</a></p>
         <p className="text-[#2F2F2F] text-center mt-4">Already have an 
         account? <a href="/signin" className="underline">Sign In</a></p>
+        
     </div>
 }
 export default SignUpSection;
