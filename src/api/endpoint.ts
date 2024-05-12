@@ -32,10 +32,48 @@ export const handleLoginAPI = async(payload: LoginPayload) : Promise<string | un
         const data = response.data.data;
         return data.token
     } catch (error) {
-        console.log(error);
         return undefined
     }
 }
+
+export const refreshTokenAPI = async (token: string) : Promise<string | undefined> => {
+    const endpoint = BK_BASE_URL+"/auth/refresh-token"
+    try {
+        const res = await axios.post(endpoint, {},  {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        } )
+        let data = res.data.data
+        return data.token
+    } catch (error) {
+        return undefined
+    }
+}
+
+export const getUserDataAPI = async (token: string) : Promise<UserDTO | undefined> =>{
+    const endpoint = BK_BASE_URL+"/auth/userdata"
+    try {
+        const res = await axios.get(endpoint, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        let data = res.data.data
+        return {
+            userId: data.userInformation.userId,
+            name: data.userInformation.name,
+            email: data.userInformation.email,
+            token: data.token
+        }
+
+    } catch (error) {
+        return undefined
+    }
+    
+}
+
+
 
 export const handleVerifyRegisterAPI = async (registrationToken: string): Promise<UserDTO | undefined> => {
     const endpoint = BK_BASE_URL+"/auth/register/activate/"+registrationToken;

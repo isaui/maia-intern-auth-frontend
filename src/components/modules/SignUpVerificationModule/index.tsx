@@ -24,17 +24,25 @@ const SignUpVerificationModule: React.FC<SignUpVerificationModuleProps> = ({ id 
         handleVerify()
     },[])
     
-    useEffect(()=>{
+    useEffect(() => {
         if (user) {
-            const intervalId = setInterval(() => {
-                setCountdown(countdown-1);
-            }, 1000);
-            setTimeout(() => {
-                clearInterval(intervalId);
-                router.push("/dashboard")
-            }, 5000);
+          const intervalId = setInterval(() => {
+            setCountdown(prevCountdown => prevCountdown - 1); // Mengurangi countdown setiap 1 detik
+          }, 1000);
+    
+          // Membersihkan interval saat komponen dibongkar
+          return () => {
+            clearInterval(intervalId);
+          };
         }
-    },[user])
+      }, [user]);
+    
+      // Setelah countdown mencapai 0, redirect ke halaman dashboard
+      useEffect(() => {
+        if (countdown === 0) {
+          router.push("/dashboard");
+        }
+      }, [countdown, router]);
 
     return (
         <div className="flex flex-col w-screen min-h-screen bg-[#F1F5F9]">
@@ -46,7 +54,7 @@ const SignUpVerificationModule: React.FC<SignUpVerificationModuleProps> = ({ id 
                         <div className="rounded-md w-full max-w-md mx-auto md:my-auto text-sm border-[#FBDFDF] border-2 bg-[#FFF5F5]
                         text-[#79889D] mt-6 p-4">The registration verification link is no longer valid.</div>: 
                         <div className="rounded-md w-full max-w-md mx-auto md:my-auto text-sm border-green-300 border-2 bg-green-200
-                        text-[#79889D] mt-6 p-4">The account under the name of xx has been successfully activated. Enjoy all the features of Maia Digital</div>
+                        text-[#79889D] mt-6 p-4">The account under the name of {user? user.name : ""} has been successfully activated. Enjoy all the features of Maia Digital</div>
                 }
                 {
                     user && <div id="registration-timer-countdown"  className="rounded-md w-full  max-w-md mx-auto md:my-auto text-sm 
